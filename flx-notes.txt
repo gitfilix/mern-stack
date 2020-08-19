@@ -1,0 +1,10 @@
+FLX notes - MERN stack training by schwarzmueller
+--------------------------------------------------
+
+frontend: npm start
+
+http://localhost:3000/
+
+
+backend: npm start
+http://localhost:5000/products
