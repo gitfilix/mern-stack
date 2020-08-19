@@ -1,0 +1,10 @@
+OS junk files
+[Tt]humbs.db
+*.DS_Store
+frontend/node_modules/
+backend/node_modules/
+*.zip
+.DS_Store
+.idea
+notes.md
+flx-secret-notes.txt
