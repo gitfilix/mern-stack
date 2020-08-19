@@ -3,6 +3,7 @@ OS junk files
 *.DS_Store
 frontend/node_modules/
 backend/node_modules/
+frontend/package-lock.json
 *.zip
 .DS_Store
 .idea
