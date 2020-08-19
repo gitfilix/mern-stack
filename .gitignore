@@ -1,8 +1,8 @@
-OS junk files
 [Tt]humbs.db
 *.DS_Store
 frontend/node_modules/
 backend/node_modules/
+package-lock.json
 frontend/package-lock.json
 *.zip
 .DS_Store
