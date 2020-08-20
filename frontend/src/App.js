@@ -10,15 +10,15 @@ const App = () => {
   <Router>
     <MainNavigation />
     <main>
-      <Switch>
-        <Route path="/" exact>
-          <Users />
-        </Route>
-        <Route path="/places/new" exact>
-          <NewPlace />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
+    <Switch>
+      <Route path="/" exact>
+        <Users />
+      </Route>
+      <Route path="/places/new" exact>
+        <NewPlace />
+      </Route>
+      <Redirect to="/" />
+    </Switch>
     </main>
   </Router>
 )}
