@@ -8,3 +8,13 @@ http://localhost:3000/
 
 backend: npm start
 http://localhost:5000/products
+
+
+
+context: 
+-------------
+kind of a event-handler provider
+for all the components which are interested (aka have some listeners) on it
+
+root component App.js
+<AuthContext.Provider value={} >
