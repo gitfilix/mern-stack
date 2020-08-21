@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
 
 // dummy data
-const DUMMY_PLACES = [
+let DUMMY_PLACES = [
   {
     id: 'p1',
     title: 'hundefelsen',
@@ -23,7 +23,7 @@ const DUMMY_PLACES = [
       lng: -41.9871531
     },
     address: 'Bundesplatz 1',
-    creator: 'u1'
+    creator: 'u2'
   }
 ]
 
@@ -43,17 +43,17 @@ const getPlacesById = (req, res, next) => {
 
 const getPlacesByUserId = (req, res, next) => {
   const userId = req.params.uid // {uid: 'u1' }
-  const place = DUMMY_PLACES.find(p => {
+  const places = DUMMY_PLACES.filter(p => {
     return p.creator === userId
   })
   // error handling asyncrounous
-  if (!place) {
+  if (!places || places.lenght == 0 ) {
     return next(
-      new HttpError('could not find place for the user id', 404)
+      new HttpError('could not find places for the user id', 404)
     )
   }
 
-  res.json({ place })
+  res.json({ places })
 }
 
 // POST req add a place: we asume the req-object is filled
@@ -80,7 +80,7 @@ const updatePlace = (req, res, next) => {
   const placeId = req.params.pid
 
   // best practice make a copy, (...rest ) edit copy, push back 
-  const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId)}
+  const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }
   const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId)
   updatedPlace.title = title
   updatedPlace.description = description
@@ -91,7 +91,11 @@ const updatePlace = (req, res, next) => {
 }
 
 const deletePlace = (req, res, next) => {
-
+  const placeId = req.params.pid
+  // filter does return a new copy and we want everything
+  // but the deleded pid - so return false for the to delete-candidate
+  DUMMY_PLACES = DUMMY_PLACES.filter(p => p.pid !== placeId)
+  res.status(200).json({ message: 'Deleted that place'})
 }
 
 // export methods
