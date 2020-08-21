@@ -55,7 +55,26 @@ const getPlacesByUserId = (req, res, next) => {
   res.json({ place })
 }
 
+// POST req add a place: we asume the req-object is filled
+// its parsed in the app.js with bodyparser to json 
+const createPlace = (req, res, next) => {
+  const { title, description, coordinates, address, creator } = req.body
+  // create a NEW obj
+  const createdPlace = {
+    title,
+    description,
+    location: coordinates,
+    address,
+    creator
+  }
+
+  DUMMY_PLACES.push(createdPlace) // or use unshift
+
+  res.status(201).json(createdPlace) // 201 new status
+}
+
 
 // export methods
 exports.getPlacesById = getPlacesById
 exports.getPlacesByUserId = getPlacesByUserId
+exports.createPlace = createPlace

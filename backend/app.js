@@ -7,6 +7,9 @@ const placesRoutes = require('./routes/places-routes')
 
 const app = express()
 
+// must be before reacing routes: parse json from post payload
+app.use(bodyParser.json())
+
 app.use('/api/places', placesRoutes)
 
 // special middleware for errorhandling (4 params)

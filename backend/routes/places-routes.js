@@ -11,6 +11,7 @@ router.get('/:pid', placesControllers.getPlacesById)
 // api/places/user/u1
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
 
+router.post('/', placesControllers.createPlace)
 
 // export router with middlewares
 module.exports = router
