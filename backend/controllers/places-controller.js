@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
 
 // dummy data
@@ -61,6 +62,7 @@ const createPlace = (req, res, next) => {
   const { title, description, coordinates, address, creator } = req.body
   // create a NEW obj
   const createdPlace = {
+    id: uuidv4(), // creates a Id by that library
     title,
     description,
     location: coordinates,
