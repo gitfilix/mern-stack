@@ -69,14 +69,34 @@ const createPlace = (req, res, next) => {
     address,
     creator
   }
-
+  // replace later
   DUMMY_PLACES.push(createdPlace) // or use unshift
 
   res.status(201).json(createdPlace) // 201 new status
 }
 
+const updatePlace = (req, res, next) => {
+  const { title, description } = req.body
+  const placeId = req.params.pid
+
+  // best practice make a copy, (...rest ) edit copy, push back 
+  const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId)}
+  const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId)
+  updatedPlace.title = title
+  updatedPlace.description = description
+  // replace at that index the original with the newly created obj
+  DUMMY_PLACES[placeIndex] = updatedPlace
+
+  res.status(200).json({place: updatedPlace})
+}
+
+const deletePlace = (req, res, next) => {
+
+}
 
 // export methods
 exports.getPlacesById = getPlacesById
 exports.getPlacesByUserId = getPlacesByUserId
 exports.createPlace = createPlace
+exports.updatePlace = updatePlace
+exports.deletePlace = deletePlace

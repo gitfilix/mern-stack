@@ -4,14 +4,20 @@ const router = express.Router()
 
 const placesControllers = require('../controllers/places-controller')
 
-// register middleware on router
+// GET register middleware on router
 // /api/places/p1
 router.get('/:pid', placesControllers.getPlacesById)
 
-// api/places/user/u1
+// GET api/places/user/u1
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
 
+// POST api/places
 router.post('/', placesControllers.createPlace)
 
+// PATCH 
+router.patch('/:pid', placesControllers.updatePlace)
+
+// DELETE place
+router.delete('/:pid', placesControllers.deletePlace)
 // export router with middlewares
 module.exports = router

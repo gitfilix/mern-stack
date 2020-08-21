@@ -3,14 +3,20 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const placesRoutes = require('./routes/places-routes')
+const HttpError = require('./models/http-error')
 // everything is hanging on that complex app object
-
 const app = express()
 
 // must be before reacing routes: parse json from post payload
 app.use(bodyParser.json())
 
 app.use('/api/places', placesRoutes)
+
+// middleware if a unvalid url route was entered - errorhandling
+app.use((req, res, next) => {
+  const error = new HttpError('Server: could not find this route, sorry...', 404)
+  throw error
+})
 
 // special middleware for errorhandling (4 params)
 app.use((error, req, res, next) => {
@@ -23,7 +29,6 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500)
   // send back a err message
   res.json({ message: error.message || 'An error has occured have fun finding that one'})
-
 })
 
 app.listen(5000)
