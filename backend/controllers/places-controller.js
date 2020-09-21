@@ -24,6 +24,17 @@ let DUMMY_PLACES = [
     },
     address: 'Bundesplatz 1',
     creator: 'u2'
+  },
+  {
+    id: 'p3',
+    title: 'bern victoriaplatz',
+    description: 'thats a view of berne',
+    location: {
+      lat: 20.7484474,
+      lng: -41.9871531
+    },
+    address: 'Victoriaplatz 1',
+    creator: 'u2'
   }
 ]
 
@@ -52,7 +63,7 @@ const getPlacesByUserId = (req, res, next) => {
       new HttpError('could not find places for the user id', 404)
     )
   }
-
+  // return all places for that uid
   res.json({ places })
 }
 

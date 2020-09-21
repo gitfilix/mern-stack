@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const placesRoutes = require('./routes/places-routes')
+const usersRoutes = require('./routes/users-routes')
 const HttpError = require('./models/http-error')
 // everything is hanging on that complex app object
 const app = express()
@@ -11,6 +12,7 @@ const app = express()
 app.use(bodyParser.json())
 
 app.use('/api/places', placesRoutes)
+app.use('/api/users', usersRoutes) // => api/users
 
 // middleware if a unvalid url route was entered - errorhandling
 app.use((req, res, next) => {
