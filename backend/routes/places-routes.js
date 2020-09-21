@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator')
 // const HttpError = require('../models/http-error')
 
 const placesControllers = require('../controllers/places-controller')
@@ -12,7 +13,16 @@ router.get('/:pid', placesControllers.getPlacesById)
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
 
 // POST api/places
-router.post('/', placesControllers.createPlace)
+// check middleware for validation 
+router.post('/',
+        [
+          check('title')
+            .not()
+            .isEmpty(),
+          check('description').isLength({min: 5}),
+          check('address').not().isEmpty()
+        ],
+        placesControllers.createPlace)
 
 // PATCH 
 router.patch('/:pid', placesControllers.updatePlace)

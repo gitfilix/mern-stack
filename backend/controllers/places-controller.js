@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
+const { validationResult } = require('express-validator')
 
 // dummy data
 let DUMMY_PLACES = [
@@ -70,6 +71,14 @@ const getPlacesByUserId = (req, res, next) => {
 // POST req add a place: we asume the req-object is filled
 // its parsed in the app.js with bodyparser to json 
 const createPlace = (req, res, next) => {
+  
+  //errors-obj from valitator 
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    console.log(errors)
+    throw new HttpError('invalid data passed, please check input data', 422)
+  } 
+
   const { title, description, coordinates, address, creator } = req.body
   // create a NEW obj
   const createdPlace = {
