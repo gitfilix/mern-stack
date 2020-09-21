@@ -8,6 +8,12 @@ const DUMMY_USERS = [
     name: "filiksi adamovski",
     email: "filiksi.adamovski@emailski.ro",
     password: "testikovski"
+  },
+  {
+    id: "u2",
+    name: "testi",
+    email: "test@test.ch",
+    password: "test"
   }
 ]
 
@@ -19,11 +25,11 @@ const getUsers = (req, res, next) => {
 const signup = (req, res, next) => {
   const { name, email, password } = req.body
 
+  // do not accept user with same email-adress
   const hasUser = DUMMY_USERS.find(u => u.email === email)
-  if( hasUser) {
+  if(hasUser) {
     throw new HttpError('Could not create user, email already exists', 422)
   }
-
 
   const createdUser = {
     id: uuidv4(),
@@ -42,14 +48,17 @@ const login = (req, res, next) => {
   console.log(password)
   // is the email the requested body mail
   const identifiedUser = DUMMY_USERS.find(u => u.email === email)
-  if (!identifiedUser || identifiedUser !== password) {
+  console.log('identifiedUser', identifiedUser)
+
+  if (identifiedUser !== password) {
     throw new HttpError('could not identify user, credentials seems to be wrong', 401)
   }
   res.json({message: 'Logged in!'})
 }
 
 
-
-exports.getUsers = getUsers
-exports.signup = signup
-exports.login = login
+module.exports ={
+  getUsers,
+  signup,
+  login
+}
