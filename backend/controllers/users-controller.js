@@ -1,4 +1,5 @@
 const HttpError = require('../models/http-error')
+const { validationResult } = require('express-validator')
 const e = require('express')
 const { v4: uuidv4 } = require('uuid')
 
@@ -13,7 +14,7 @@ const DUMMY_USERS = [
     id: "u2",
     name: "testi",
     email: "test@test.ch",
-    password: "test"
+    password: "test123"
   }
 ]
 
@@ -23,6 +24,11 @@ const getUsers = (req, res, next) => {
 }
 
 const signup = (req, res, next) => {
+  // first: valiation 
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new HttpError('invalid or not data at all passed, please check input data', 422)
+  } 
   const { name, email, password } = req.body
 
   // do not accept user with same email-adress

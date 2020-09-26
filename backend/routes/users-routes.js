@@ -1,5 +1,6 @@
 // continue here with video 99 !
 const express = require('express')
+const { check } = require('express-validator')
 const usersControllers = require('../controllers/users-controller')
 const router = express.Router()
 // const HttpError = require('../models/http-error')
@@ -10,9 +11,21 @@ const router = express.Router()
 router.get('/', usersControllers.getUsers)
 
 // POST signup api/users/signup
-router.post('/signup', usersControllers.signup)
+// input checks
+router.post('/signup', 
+  [
+    check('name')
+      .not()
+      .isEmpty(),
+    check('email')
+      .normalizeEmail()
+      .isEmail(),
+    check('password').isLength({ min: 6 })
+  ],
+usersControllers.signup
+)
 
-// POST 
+// POST login /api/users/login
 router.post('/login', usersControllers.login)
 
 module.exports = router
