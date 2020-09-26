@@ -1,12 +1,12 @@
 const MongoClient = require('mongodb').MongoClient
-
-// const client = new MongoClient(url, {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true
-// }); //which server to connect
-// 
-
 const url = 'mongodb+srv://mongodbuser01:77nobigdeal88@cluster0.ajxtu.mongodb.net/products_test?retryWrites=true&w=majority'
+
+const client = new MongoClient(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}) //which server to connect
+ 
+
 
 const createProduct = async (req, res, next) => {
   const newProduct = {
@@ -27,7 +27,24 @@ const createProduct = async (req, res, next) => {
   res.json(newProduct);
 }
 
-const getProducts = async (req, res, next) => { }
+const getProducts = async (req, res, next) => {
+  const client = new MongoClient(url)
+
+  let products
+
+  try {
+    await client.connect()
+    const db = client.db()
+    products = await db.collection('products').find().toArray()
+
+  } catch (error){
+    return res.json({ message: 'could not retrieve product'})
+  }
+  client.close()
+
+  res.json(products)
+
+ }
 
 exports.createProduct = createProduct
 exports.getProducts = getProducts
