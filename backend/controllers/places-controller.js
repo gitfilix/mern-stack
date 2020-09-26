@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
 const { validationResult } = require('express-validator')
+const getCoordsForAddress = require('../util/location')
+
 
 // dummy data
 let DUMMY_PLACES = [
@@ -68,18 +70,27 @@ const getPlacesByUserId = (req, res, next) => {
   res.json({ places })
 }
 
+
 // POST req add a place: we asume the req-object is filled
 // its parsed in the app.js with bodyparser to json 
-const createPlace = (req, res, next) => {
+const createPlace = async (req, res, next) => {
   
-  //errors-obj from valitator 
+  //errors-obj from validator 
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     console.log(errors)
-    throw new HttpError('invalid or not data at all passed, please check input data', 422)
+    next (new HttpError('invalid or not data at all passed, please check input data', 422))
   } 
 
-  const { title, description, coordinates, address, creator } = req.body
+  const { title, description, address, creator } = req.body
+
+  // gets the coords from an adress in that utility helper
+  let coordinates
+  try {
+    coordinates = await getCoordsForAddress(address)
+  } catch (error) {
+    return next(error)
+  }
   // create a NEW obj
   const createdPlace = {
     id: uuidv4(), // creates a Id by that library
