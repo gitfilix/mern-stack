@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
-const { validationResult } = require('express-validator')
 const getCoordsForAddress = require('../util/location')
+const { validationResult } = require('express-validator')
 
 
 // dummy data
@@ -69,7 +69,6 @@ const getPlacesByUserId = (req, res, next) => {
   // return all places for that uid
   res.json({ places })
 }
-
 
 // POST req add a place: we asume the req-object is filled
 // its parsed in the app.js with bodyparser to json 
