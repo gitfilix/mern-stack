@@ -39,10 +39,18 @@ independant documents (data records)
 great for logs, orders, chat, messages
 
 
+
 mongo account
 
 f.a@webkanal adress
-
-
 mongodbuser01
 77nobigdeal88
+
+
+Mongoose
+---------
+ mongoose-find returns an array with 'cusor' - within a almost-good promise. to make it a 
+ real promise use exec() method:
+   const products = await Product.find().exec()
+
+
