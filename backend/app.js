@@ -53,5 +53,6 @@ mongoose.connect(connectUrl, connectConfig)
 
   })
   .catch(err => {
+    console.log('there is a connection error - is your ip whitelisted? ')
     console.log(err)
   })
