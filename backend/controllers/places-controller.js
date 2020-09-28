@@ -3,6 +3,8 @@ const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const { validationResult } = require('express-validator')
 
+// model is a constructor function
+const Place = require('../models/place')
 
 // dummy data
 let DUMMY_PLACES = [
@@ -73,36 +75,41 @@ const getPlacesByUserId = (req, res, next) => {
 // POST req add a place: we asume the req-object is filled
 // its parsed in the app.js with bodyparser to json 
 const createPlace = async (req, res, next) => {
-  
-  //errors-obj from validator 
-  const errors = validationResult(req)
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log(errors)
-    next (new HttpError('invalid or not data at all passed, please check input data', 422))
-  } 
-
-  const { title, description, address, creator } = req.body
-
-  // gets the coords from an adress in that utility helper
-  let coordinates
-  try {
-    coordinates = await getCoordsForAddress(address)
-  } catch (error) {
-    return next(error)
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
   }
-  // create a NEW obj
-  const createdPlace = {
-    id: uuidv4(), // creates a Id by that library
+
+  const { title, description, address, creator } = req.body;
+
+  let coordinates;
+  try {
+    coordinates = await getCoordsForAddress(address);
+  } catch (error) {
+    return next(error);
+  }
+
+  // const title = req.body.title;
+  const createdPlace = new Place({
     title,
     description,
-    location: coordinates,
     address,
+    location: coordinates,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg',
     creator
-  }
-  // replace later
-  DUMMY_PLACES.push(createdPlace) // or use unshift
+  });
 
-  res.status(201).json(createdPlace) // 201 new status
+  try {
+    await createdPlace.save();
+  } catch (err) {
+    const error = new HttpError(
+      'Creating place failed, so sorry', 500 )
+    return next(error)
+  }
+
+  res.status(201).json({ place: createdPlace });
 }
 
 const updatePlace = (req, res, next) => {

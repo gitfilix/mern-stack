@@ -48,7 +48,7 @@ mongoose.connect(connectUrl, connectConfig)
   // .connect('mongodb+srv://mongodbuser01:77nobigdeal88@cluster0.ajxtu.mongodb.net/places?retryWrites=true&w=majority')
   .then(() => {
     // start the app
-    console.log('+++ mongo database connected +++')
+    console.log('+++ mongo database: successfully connected +++')
     app.listen(5000)
 
   })
