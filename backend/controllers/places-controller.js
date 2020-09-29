@@ -46,12 +46,11 @@ let DUMMY_PLACES = [
 const getPlacesById = async (req, res, next) => {
   const placeId = req.params.pid // { pid: 'p1'}
   let place
-
   try {
     // findById is mongoose-specific - place
     place = await Place.findById(placeId)
   } catch (err) {
-    const error = new HttpError('something went wrong... could not find a place', 500)
+    const error = new HttpError('something went wrong...- could not find a place', 500)
     return next(error)
   }
 
@@ -66,19 +65,27 @@ const getPlacesById = async (req, res, next) => {
 }
 
 
-const getPlacesByUserId = (req, res, next) => {
+const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid // {uid: 'u1' }
-  const places = DUMMY_PLACES.filter(p => {
-    return p.creator === userId
-  })
+  let places
+
+  try {
+    // using mongoose specific method find() not mongo-db find. -> we get an array back 
+    places = await Place.find({ creator : userId })
+  } catch (err) {
+    const error = new HttpError('fetching places failed - try again', 500)
+    return next(error)
+  }
+
   // error handling asyncrounous
   if (!places || places.lenght == 0 ) {
     return next(
       new HttpError('could not find places for the user id', 404)
     )
   }
+
   // return all places for that uid
-  res.json({ places })
+  res.json({ places: places.map(place => place.toObject({ getters: true })) })
 }
 
 // POST req add a place: we asume the req-object is filled
