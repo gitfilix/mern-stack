@@ -18,3 +18,11 @@ for all the components which are interested (aka have some listeners) on it
 
 root component App.js
 <AuthContext.Provider value={} >
+
+
+Mongoose trick
+----------------------
+
+getters: true object -> converts _id to id
+es.json({ place: place.toObject( { getters: true }) }) // place object converted to normal js-object. getters: true = _id :id
+

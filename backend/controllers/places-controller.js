@@ -43,17 +43,26 @@ let DUMMY_PLACES = [
   }
 ]
 
-const getPlacesById = (req, res, next) => {
+const getPlacesById = async (req, res, next) => {
   const placeId = req.params.pid // { pid: 'p1'}
-  const place = DUMMY_PLACES.find(place => {
-    return place.id === placeId
-  })
-  // if we RETURN res status then no other code will be execued
-  if (!place) {
-    throw new HttpError(`could not find place.. for that pid: ${placeId} `, 404)
+  let place
+
+  try {
+    // findById is mongoose-specific - place
+    place = await Place.findById(placeId)
+  } catch (err) {
+    const error = new HttpError('something went wrong... could not find a place', 500)
+    return next(error)
   }
 
-  res.json({ place: place }) // yea - you can shorten that...
+
+  // if we RETURN res status then no other code will be execued
+  if (!place) {
+    const error = new HttpError(`could not find place.. for that pid: ${placeId} `, 404)
+    return next(error)
+  }
+
+  res.json({ place: place.toObject( { getters: true }) }) // place object converted to normal js-object. getters: true = _id :id
 }
 
 
