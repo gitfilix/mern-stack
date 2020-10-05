@@ -20,9 +20,13 @@ root component App.js
 <AuthContext.Provider value={} >
 
 
-Mongoose trick
+Mongoose tricks
 ----------------------
 
 getters: true object -> converts _id to id
-es.json({ place: place.toObject( { getters: true }) }) // place object converted to normal js-object. getters: true = _id :id
+res.json({ place: place.toObject( { getters: true }) }) // place object converted to normal js-object. getters: true = _id :id
 
+Schema: // unique propperty: creates a index for email, that speeds up quering process
+-> you need mongoose-validator package for that
+
+email: { type: String, reqired: true, unique: true }
