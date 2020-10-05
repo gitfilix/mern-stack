@@ -128,12 +128,14 @@ const createPlace = async (req, res, next) => {
   res.status(201).json({ place: createdPlace });
 }
 
+
 const updatePlace = async (req, res, next) => {
   // validation
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    console.log(errors)
-    throw new HttpError('invalid or not data at all passed, please check input data', 422)
+    return next(
+      new HttpError('invalid or not data at all passed, please check input data', 422)
+    )
   } 
 
   const { title, description } = req.body
