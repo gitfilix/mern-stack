@@ -128,7 +128,7 @@ const createPlace = async (req, res, next) => {
   res.status(201).json({ place: createdPlace });
 }
 
-const updatePlace = (req, res, next) => {
+const updatePlace = async (req, res, next) => {
   // validation
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -138,27 +138,58 @@ const updatePlace = (req, res, next) => {
 
   const { title, description } = req.body
   const placeId = req.params.pid
+  
+  let place
+  try {
+    // findById is mongoose-specific - 
+    place = await Place.findById(placeId)
+  } catch (err) {
+    const error = new HttpError('could not update place', 500 )
+    return next(error)
+  }
 
   // best practice make a copy, (...rest ) edit copy, push back 
-  const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }
-  const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId)
-  updatedPlace.title = title
-  updatedPlace.description = description
-  // replace at that index the original with the newly created obj
-  DUMMY_PLACES[placeIndex] = updatedPlace
 
-  res.status(200).json({place: updatedPlace})
+  place.title = title
+  place.description = description
+  // save updated
+  try {
+    await place.save()
+  } catch (err) {
+    const error = new HttpError('could not save updated place', 501)
+    return next(error)
+  }
+
+  res.status(200).json({ place: place.toObject({ getters: true }) })
+
 }
 
-const deletePlace = (req, res, next) => {
+const deletePlace = async (req, res, next) => {
   const placeId = req.params.pid
-  if (!DUMMY_PLACES.find(p => p.id === placeId)) {
-    throw new HttpError('Could not find a place for that id.', 404)
+  let place
+  // 1. find it 
+  try {
+    place = await Place.findById(placeId)
+  } catch (err) {
+    const error = new HttpError('could not delete place', 500)
+    return next(error)
   }
+
+  // 2. remove it from db
+  try {
+    await place.remove()
+  } catch (err) {
+    const error = new HttpError('could not delete taht place', 500)
+    return next(error)
+  }
+
+
+  res.status(200).json({ message: 'Deleted that ugly place'})
+
+
   // filter does return a new copy and we want everything
   // but the deleded pid - so return false for the to delete-candidate
-  DUMMY_PLACES = DUMMY_PLACES.filter(p => p.pid !== placeId)
-  res.status(200).json({ message: 'Deleted that place'})
+  // DUMMY_PLACES = DUMMY_PLACES.filter(p => p.pid !== placeId)
 }
 
 // export methods
