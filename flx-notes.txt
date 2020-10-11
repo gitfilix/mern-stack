@@ -30,3 +30,10 @@ Schema: // unique propperty: creates a index for email, that speeds up quering p
 -> you need mongoose-validator package for that
 
 email: { type: String, reqired: true, unique: true }
+
+
+foreign key in Schema (place.js) 
+// creator: this should correspond to a User.Id provided by mongo.DB 
+// ref: 'User': connection to other collection called User (foreign key)
+creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User'}
+

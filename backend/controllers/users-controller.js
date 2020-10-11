@@ -41,7 +41,7 @@ const signup = async (req, res, next) => {
       new HttpError('invalid or not data at all passed, please check input data', 422)
     )
   } 
-  const { name, email, password, places } = req.body
+  const { name, email, password } = req.body
 
   let existingUser
   try {
@@ -62,7 +62,7 @@ const signup = async (req, res, next) => {
     email,
     image: 'https://www.indianapoliszoo.com/wp-content/uploads/2018/04/Amur-tiger3-Fred-Cate.jpg',
     password,
-    places
+    places: []
   })
 
   try {
