@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
 const { validationResult } = require('express-validator')
 const User = require('../models/user')
+const user = require('../models/user')
 
 
 const DUMMY_USERS = [
@@ -19,9 +20,17 @@ const DUMMY_USERS = [
   }
 ]
 
-const getUsers = (req, res, next) => {
-  // for now just return the dummy
-  res.json({ users: DUMMY_USERS })
+const getUsers = async (req, res, next) => {
+  let users
+  try {
+    // find snytax: give back username , email but no password. 
+    users = await User.find({}, '-password')
+
+  } catch (err) {
+    const error = new HttpError('fetching users falied, try again',500)
+    return next(error)
+  }
+  res.json({users: users.map(user => user.toObject({ getters: true }))})
 }
 
 const signup = async (req, res, next) => {
