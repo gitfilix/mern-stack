@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator')
 
 // model is a constructor function
 const Place = require('../models/place')
+const User = require('../models/user')
 
 // dummy data
 let DUMMY_PLACES = [
@@ -117,7 +118,24 @@ const createPlace = async (req, res, next) => {
     creator
   });
 
+  // check if user for this places exists with his id
+  let user
+
   try {
+    user = await User.findById(creator)
+  } catch (err) {
+    const error = new HttpError('creating failed. because of user? ', 500)
+    return next(error)
+  } 
+
+  if (!user) {
+    const error = new HttpError('could not find  user for provided it', 404)
+    return next(error)
+  }
+  console.log(user)
+
+  try {
+    // TODO: continue here
     await createdPlace.save();
   } catch (err) {
     const error = new HttpError(
