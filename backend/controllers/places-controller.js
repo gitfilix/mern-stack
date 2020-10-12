@@ -197,17 +197,28 @@ const updatePlace = async (req, res, next) => {
 const deletePlace = async (req, res, next) => {
   const placeId = req.params.pid
   let place
-  // 1. find it 
+  // 1. find it with ref from schema user
   try {
-    place = await Place.findById(placeId)
+    place = await (await Place.findById(placeId)).populated('creator')
   } catch (err) {
     const error = new HttpError('could not delete place', 500)
     return next(error)
   }
 
-  // 2. remove it from db
+  // 2. check if its existing
+  if (!place) {
+    const error = new HttpError('could not find place for this id', 404)
+    return next(error)
+  }
+
+  // 3. remove it from db by transaction within a session
   try {
-    await place.remove()
+    const sess = await mongoose.startSession()
+    sess.startTransaction()
+      await place.remove({session: sess})
+      place.creator.places.pull(place)
+      await place.create.save({session: sess})
+    await sess.commitTransaction()
   } catch (err) {
     const error = new HttpError('could not delete taht place', 500)
     return next(error)
