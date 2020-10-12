@@ -2,6 +2,8 @@ const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const { validationResult } = require('express-validator')
+const mongoose = require('mongoose')
+const mongooseUniqueValidator = require('mongoose-unique-validator')
 
 // model is a constructor function
 const Place = require('../models/place')
@@ -127,16 +129,24 @@ const createPlace = async (req, res, next) => {
     const error = new HttpError('creating failed. because of user? ', 500)
     return next(error)
   } 
-
+  // check, if user is in db
   if (!user) {
-    const error = new HttpError('could not find  user for provided it', 404)
+    const error = new HttpError('could not find a corresponding user for provided it', 404)
     return next(error)
   }
   console.log(user)
 
   try {
-    // TODO: continue here
-    await createdPlace.save();
+    // start transaction within a session:
+    // save user and createdPlace
+    const sess = await mongoose.startSession()
+      sess.startTransaction()
+      await createdPlace.save({ session: sess })
+    // mongoose push: pushes place-id to user-collection
+      user.places.push(createdPlace)
+      await user.save({ session: sess })
+    await sess.commitTransaction()
+
   } catch (err) {
     const error = new HttpError(
       'Creating place failed, so sorry', 500 )
