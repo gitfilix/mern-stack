@@ -3,7 +3,7 @@ const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const { validationResult } = require('express-validator')
 const mongoose = require('mongoose')
-const mongooseUniqueValidator = require('mongoose-unique-validator')
+// const mongooseUniqueValidator = require('mongoose-unique-validator')
 
 // model is a constructor function
 const Place = require('../models/place')
@@ -193,45 +193,43 @@ const updatePlace = async (req, res, next) => {
   res.status(200).json({ place: place.toObject({ getters: true }) })
 
 }
-
 const deletePlace = async (req, res, next) => {
   const placeId = req.params.pid
+
   let place
-  // 1. find it with ref from schema user
+  // 1. find it from Place with populate WHERE user is creator 
   try {
-    place = await (await Place.findById(placeId)).populated('creator')
+    place = await Place.findById(placeId).populate('creator')
   } catch (err) {
-    const error = new HttpError('could not delete place', 500)
+    const error = new HttpError('Something went wrong, could not delete place.', 500)
     return next(error)
   }
-
-  // 2. check if its existing
+  // 2. check if place even exists. 
   if (!place) {
-    const error = new HttpError('could not find place for this id', 404)
+    const error = new HttpError('Could not find place for this id.', 404)
     return next(error)
   }
 
-  // 3. remove it from db by transaction within a session
+  // 3. remofit from collection place WHERE creator have it in his array
   try {
+    // create a mongoose session
     const sess = await mongoose.startSession()
-    sess.startTransaction()
-      await place.remove({session: sess})
-      place.creator.places.pull(place)
-      await place.create.save({session: sess})
-    await sess.commitTransaction()
+    sess.startTransaction();
+      await place.remove({ session: sess });
+      // mongoose.pull means put it off 
+      place.creator.places.pull(place);
+      await place.creator.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
-    const error = new HttpError('could not delete taht place', 500)
-    return next(error)
+    const error = new HttpError(
+      'Something went wrong, could not delete that ugly place.',
+      500
+    );
+    return next(error);
   }
-
-
-  res.status(200).json({ message: 'Deleted that ugly place'})
-
-
-  // filter does return a new copy and we want everything
-  // but the deleded pid - so return false for the to delete-candidate
-  // DUMMY_PLACES = DUMMY_PLACES.filter(p => p.pid !== placeId)
-}
+  // respond 200 after success
+  res.status(200).json({ message: 'Deleted ugly place.' });
+};
 
 // export methods
 exports.getPlacesById = getPlacesById
