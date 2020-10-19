@@ -7,7 +7,6 @@ const router = express.Router()
 
 
 // GET register middleware on router
-// 
 router.get('/', usersControllers.getUsers)
 
 // POST signup api/users/signup

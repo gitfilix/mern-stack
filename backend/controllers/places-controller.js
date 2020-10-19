@@ -9,43 +9,6 @@ const mongoose = require('mongoose')
 const Place = require('../models/place')
 const User = require('../models/user')
 
-// dummy data
-let DUMMY_PLACES = [
-  {
-    id: 'p1',
-    title: 'hundefelsen',
-    description: 'the nicest view from sigriswil',
-    location: {
-      lat: 40.7484474,
-      lng: -74.9871531
-    },
-    address: '21 jump street',
-    creator: 'u1'
-  },
-  {
-    id: 'p2',
-    title: 'bern bundesplatz',
-    description: 'das ist lustig im sommer mit kindern',
-    location: {
-      lat: 20.7484474,
-      lng: -41.9871531
-    },
-    address: 'Bundesplatz 1',
-    creator: 'u2'
-  },
-  {
-    id: 'p3',
-    title: 'bern victoriaplatz',
-    description: 'thats a view of berne',
-    location: {
-      lat: 20.7484474,
-      lng: -41.9871531
-    },
-    address: 'Victoriaplatz 1',
-    creator: 'u2'
-  }
-]
-
 const getPlacesById = async (req, res, next) => {
   const placeId = req.params.pid // { pid: 'p1'}
   let place
@@ -57,38 +20,39 @@ const getPlacesById = async (req, res, next) => {
     return next(error)
   }
 
-
   // if we RETURN res status then no other code will be execued
   if (!place) {
     const error = new HttpError(`could not find place.. for that pid: ${placeId} `, 404)
     return next(error)
   }
-
-  res.json({ place: place.toObject( { getters: true }) }) // place object converted to normal js-object. getters: true = _id :id
+  
+  // place object converted to normal js-object. getters: true = _id :id
+  res.json({ place: place.toObject( { getters: true }) }) 
 }
 
-
+// 2.nd alternative approach (lection 137)
 const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid // {uid: 'u1' }
-  let places
-
+  // let places
+  let userWithPlaces
   try {
     // using mongoose specific method find() not mongo-db find. -> we get an array back 
-    places = await Place.find({ creator : userId })
+    // now here: search User collection with findbyId (userId) 
+    userWithPlaces = await User.findById(userId).populate('places')
   } catch (err) {
-    const error = new HttpError('fetching places failed - try again', 500)
+    const error = new HttpError('fetching userWithPlaces failed - try again', 500)
     return next(error)
   }
 
   // error handling asyncrounous
-  if (!places || places.lenght == 0 ) {
+  if (!userWithPlaces || userWithPlaces.lenght == 0 ) {
     return next(
       new HttpError('could not find places for the user id', 404)
     )
   }
 
   // return all places for that uid
-  res.json({ places: places.map(place => place.toObject({ getters: true })) })
+  res.json({ places: userWithPlaces.map(place => place.toObject({ getters: true })) })
 }
 
 // POST req add a place: we asume the req-object is filled
@@ -178,8 +142,6 @@ const updatePlace = async (req, res, next) => {
     return next(error)
   }
 
-  // best practice make a copy, (...rest ) edit copy, push back 
-
   place.title = title
   place.description = description
   // save updated
@@ -189,9 +151,8 @@ const updatePlace = async (req, res, next) => {
     const error = new HttpError('could not save updated place', 501)
     return next(error)
   }
-
+  // return response 200 - updated place
   res.status(200).json({ place: place.toObject({ getters: true }) })
-
 }
 const deletePlace = async (req, res, next) => {
   const placeId = req.params.pid
@@ -216,6 +177,7 @@ const deletePlace = async (req, res, next) => {
     const sess = await mongoose.startSession()
     sess.startTransaction();
       await place.remove({ session: sess });
+      // get access to another collection by place.creator.places 
       // mongoose.pull means put it off 
       place.creator.places.pull(place);
       await place.creator.save({ session: sess });
@@ -227,7 +189,7 @@ const deletePlace = async (req, res, next) => {
     );
     return next(error);
   }
-  // respond 200 after success
+  // respond 200 after successfull deletion 
   res.status(200).json({ message: 'Deleted ugly place.' });
 };
 

@@ -10,6 +10,7 @@ backend: npm start
 http://localhost:5000/products
 
 
+best practice make a copy, (...rest ) edit copy, push back 
 
 context: 
 -------------

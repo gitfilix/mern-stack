@@ -5,21 +5,6 @@ const User = require('../models/user')
 const user = require('../models/user')
 
 
-const DUMMY_USERS = [
-  {
-    id: "u1",
-    name: "filiksi adamovski",
-    email: "filiksi.adamovski@emailski.ro",
-    password: "testikovski"
-  },
-  {
-    id: "u2",
-    name: "testi",
-    email: "test@test.ch",
-    password: "test123"
-  }
-]
-
 const getUsers = async (req, res, next) => {
   let users
   try {
