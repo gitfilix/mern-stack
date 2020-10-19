@@ -57,9 +57,33 @@ const Auth = () => {
     setIsLoginMode(prevMode => !prevMode);
   };
 
-  const authSubmitHandler = event => {
+  const authSubmitHandler = async event => {
     event.preventDefault();
-    console.log('Auth - user submitted',formState.inputs);
+    // connect to backend
+    if (isLoginMode) {
+
+    } else {
+      try {
+        // is in signUp-mode  
+        const response = await fetch('http://localhost:5000/api/users/signup', { 
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify({
+            name : formState.inputs.name.value, 
+            email: formState.inputs.email.value, 
+            password: formState.inputs.password.value
+          }),
+        })
+        // actual response payload
+        const responseData = await response.json()
+        console.log('responseData', responseData)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    // console.log('Auth - user submitted',formState.inputs);
     auth.login()
   };
 

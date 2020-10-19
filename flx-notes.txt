@@ -38,3 +38,7 @@ foreign key in Schema (place.js)
 // ref: 'User': connection to other collection called User (foreign key)
 creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User'}
 
+populate method: search in a foreign collection with populte as the key
+// 1. find it from Place with populate WHERE user is creator 
+
+place = await Place.findById(placeId).populate('creator')
