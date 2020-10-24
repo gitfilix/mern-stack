@@ -12,6 +12,26 @@ const app = express()
 // must be before reacing routes: parse json from post payload
 app.use(bodyParser.json())
 
+// prevent CORS problems: change header for each
+app.use((req, res, next) => {
+  // allow Cors from all origins
+  res.setHeader('Access-Control-Allow-Origin',
+                 '*'
+  )
+  // set a new specific headers for different types - 
+  // Authorization is NOT set default in the browser we can allow it here
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  )
+  // allows HTTP methods
+  res.setHeader('Access-Control-Allow-Methods',
+                'GET, POST, PATCH, DELETE'
+  )
+  next()
+})
+
+
 app.use('/api/places', placesRoutes)
 app.use('/api/users', usersRoutes) // => api/users
 
