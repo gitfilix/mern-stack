@@ -3,6 +3,8 @@ import React, { useState, useContext } from 'react';
 import Card from '../../shared/components/UIElements/Card';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
@@ -14,10 +16,14 @@ import { AuthContext } from '../../shared/context/auth-context'
 import './Auth.css';
 
 const Auth = () => {
-  // context 
+  // context helper
   const auth = useContext(AuthContext)
 
-  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoginMode, setIsLoginMode] = useState(true)
+  // loading wheel feedback shissle
+  const [isLoading, setIsLoading] = useState(false)
+  // errors: undefined at start
+  const [error, setError] = useState()
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -31,7 +37,7 @@ const Auth = () => {
       }
     },
     false
-  );
+  )
   
   // login or signUp mode 
   const switchModeHandler = () => {
@@ -41,7 +47,7 @@ const Auth = () => {
           name: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
-      );
+      )
       // signup mode
     } else {
       setFormData({
@@ -55,7 +61,7 @@ const Auth = () => {
       );
     }
     setIsLoginMode(prevMode => !prevMode);
-  };
+  }
 
   const authSubmitHandler = async event => {
     event.preventDefault();
@@ -64,7 +70,8 @@ const Auth = () => {
 
     } else {
       try {
-        // is in signUp-mode  
+        // is in signUp-mode now  
+        setIsLoading(true)
         const response = await fetch('http://localhost:5000/api/users/signup', { 
           method: 'POST',
           headers: {
@@ -79,16 +86,24 @@ const Auth = () => {
         // actual response payload
         const responseData = await response.json()
         console.log('responseData', responseData)
+        setIsLoading(false)
+        auth.login()
       } catch (err) {
         console.log(err)
+        setIsLoading(false)
+        setError(err.message || 'completely obsolete auth error message from frontend.')
       }
     }
+    // data now loaded 
+    setIsLoading(false)
+
     // console.log('Auth - user submitted',formState.inputs);
     auth.login()
   };
 
   return (
     <Card className="authentication">
+      {isLoading && <LoadingSpinner asOverlay/>}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={authSubmitHandler}>
