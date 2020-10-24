@@ -66,13 +66,39 @@ const Auth = () => {
   const authSubmitHandler = async event => {
     event.preventDefault();
     // connect to backend
+    setIsLoading(true)
     if (isLoginMode) {
-
-    } else {
       try {
-        // is in signUp-mode now  
-        setIsLoading(true)
-        const response = await fetch('http://localhost:5000/api/users/signup', { 
+        // is in LOGIN mode
+        const response = await fetch('http://localhost:5000/api/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value
+          }),
+        })
+        // actual response payload
+        const responseData = await response.json()
+        // status is a NOT-200
+        if (!response.ok) {
+          throw new Error(responseData.message)
+        }
+        console.log('responseData login', responseData)
+        setIsLoading(false)
+        auth.login()
+      } catch (err) {
+        console.log(err)
+        setIsLoading(false)
+        // something else than a 400 or 500'ish error occured
+        setError(err.message || 'completely obsolete auth error message from frontend.')
+      }
+    } else {
+      // is in sign-Up-mode now  
+      try {
+        const response = await fetch('http://localhost:5000/api/users/signup', {
           method: 'POST',
           headers: {
             'Content-Type' : 'application/json'
@@ -85,66 +111,75 @@ const Auth = () => {
         })
         // actual response payload
         const responseData = await response.json()
+        // status is a NOT-200
+        if (!response.ok) {
+          throw new Error(responseData.message)
+        }
         console.log('responseData', responseData)
         setIsLoading(false)
         auth.login()
       } catch (err) {
         console.log(err)
         setIsLoading(false)
+        // something else than a 400 or 500'ish error occured
         setError(err.message || 'completely obsolete auth error message from frontend.')
       }
     }
-    // data now loaded 
-    setIsLoading(false)
+  }
 
-    // console.log('Auth - user submitted',formState.inputs);
-    auth.login()
-  };
+  const errorHandler = () => {
+    // reset to
+    setError(null)
+  }
 
   return (
-    <Card className="authentication">
-      {isLoading && <LoadingSpinner asOverlay/>}
-      <h2>Login Required</h2>
-      <hr />
-      <form onSubmit={authSubmitHandler}>
-        {!isLoginMode && (
+    <React.Fragment>
+      {/* not working for some damn reason */}
+      {/* <ErrorModal error={error} onClear={errorHandler} /> */}
+      <Card className="authentication">
+        {isLoading && <LoadingSpinner asOverlay/>}
+        <h2>Login Required</h2>
+        <hr />
+        <form onSubmit={authSubmitHandler}>
+          {!isLoginMode && (
+            <Input
+              element="input"
+              id="name"
+              type="text"
+              label="Your Name"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a name."
+              onInput={inputHandler}
+            />
+          )}
           <Input
             element="input"
-            id="name"
-            type="text"
-            label="Your Name"
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Please enter a name."
+            id="email"
+            type="email"
+            label="E-Mail"
+            validators={[VALIDATOR_EMAIL()]}
+            errorText="Please enter a valid email address."
             onInput={inputHandler}
           />
-        )}
-        <Input
-          element="input"
-          id="email"
-          type="email"
-          label="E-Mail"
-          validators={[VALIDATOR_EMAIL()]}
-          errorText="Please enter a valid email address."
-          onInput={inputHandler}
-        />
-        <Input
-          element="input"
-          id="password"
-          type="password"
-          label="Password"
-          validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid password, at least 5 characters."
-          onInput={inputHandler}
-        />
-        <Button type="submit" disabled={!formState.isValid}>
-          {isLoginMode ? 'LOGIN' : 'SIGNUP'}
+          <Input
+            element="input"
+            id="password"
+            type="password"
+            label="Password"
+            validators={[VALIDATOR_MINLENGTH(5)]}
+            errorText="Please enter a valid password, at least 5 characters."
+            onInput={inputHandler}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            {isLoginMode ? 'LOGIN' : 'SIGNUP'}
+          </Button>
+        </form>
+        <Button inverse onClick={switchModeHandler}>
+          SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
         </Button>
-      </form>
-      <Button inverse onClick={switchModeHandler}>
-        SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
-      </Button>
-    </Card>
-  );
-};
+      </Card>
+    </React.Fragment>
+  )
+}
 
 export default Auth;
