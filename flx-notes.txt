@@ -21,6 +21,23 @@ root component App.js
 <AuthContext.Provider value={} >
 
 
+// useEffect and async:
+const Users = () => {
+  // load only once: -> useEffect Hook here with an empty []:
+  useEffect(()=> {
+    // create iffee: useEffect dont like async/ await functions: therfore create an iffee 
+    // and do the async thingy here while awaiting on the response 
+    const sendRequest = async () => {
+      const response = await fetch('http://localhost:5000/api/users')
+      const responseData = await response.json()
+    }
+    sendRequest()
+  }, [])
+
+  return <UsersList items={USERS} />;
+}
+
+
 Mongoose tricks
 ----------------------
 
