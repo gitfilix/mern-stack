@@ -38,6 +38,10 @@ const Users = () => {
 }
 
 
+// useRef: stores data and survives render-cycles
+// will prevent function from re-initialize 
+useRef([])
+
 Mongoose tricks
 ----------------------
 
