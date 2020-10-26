@@ -3,9 +3,10 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 // hook helperclass
 export const useHttpClient = () =>  {
   // hooks
+  // loading wheel feedback shissle
   const [isLoading, setIsLoading] = useState(false)
+  // errors: undefined at start
   const [error, setError] = useState()
-
   // useRef holds data also after re-initialisation or re-renderin the componente
   const activeHttpRequests = useRef([])
 
@@ -25,18 +26,26 @@ export const useHttpClient = () =>  {
       })
       
       const responseData = await response.json()
+
+      // remove abort-controller on current request after successfull 
+      activeHttpRequests.current = activeHttpRequests.current.filter(
+        reqCtrl => reqCtrl !== httpAbortCtrl
+      )
+
       // handle the not-200-ish errors here
       if(!response.ok) {
         throw new Error(responseData.message)
       }
+
+      setIsLoading(false)
       // status 200 return data
       return responseData
-
     // handle errors  of fetch / api
     } catch (err) {
       setError(err.message)
+      setIsLoading(false)
+      throw err
     }
-    setIsLoading(false)
   }, [])
  
 
@@ -50,11 +59,10 @@ export const useHttpClient = () =>  {
   
   useEffect(() => {
     return () => {
-      activeHttpRequest.current.forEach(abortCtrl => abortCtrl.abort())
+      activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort())
     }
   }, [])
 
   // return the obj with all info
   return { isLoading, error, sendRequest, clearError }
-  }
 }

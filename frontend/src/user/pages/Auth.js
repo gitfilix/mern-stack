@@ -1,17 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react'
 
-import Card from '../../shared/components/UIElements/Card';
-import Input from '../../shared/components/FormElements/Input';
-import Button from '../../shared/components/FormElements/Button';
+import Card from '../../shared/components/UIElements/Card'
+import Input from '../../shared/components/FormElements/Input'
+import Button from '../../shared/components/FormElements/Button'
 import ErrorModal from '../../shared/components/UIElements/ErrorModal'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE
-} from '../../shared/util/validators';
-import { useForm } from '../../shared/hooks/form-hook';
+} from '../../shared/util/validators'
+
+import { useForm } from '../../shared/hooks/form-hook'
 import { AuthContext } from '../../shared/context/auth-context'
+import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import './Auth.css';
 
@@ -20,10 +23,8 @@ const Auth = () => {
   const auth = useContext(AuthContext)
 
   const [isLoginMode, setIsLoginMode] = useState(true)
-  // loading wheel feedback shissle
-  const [isLoading, setIsLoading] = useState(false)
-  // errors: undefined at start
-  const [error, setError] = useState()
+  // helper http request 
+  const { isLoading, error, sendRequest, clearError } = useHttpClient()
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -66,76 +67,52 @@ const Auth = () => {
   const authSubmitHandler = async event => {
     event.preventDefault();
     // connect to backend
-    setIsLoading(true)
+    
     if (isLoginMode) {
       try {
-        // is in LOGIN mode
-        const response = await fetch('http://localhost:5000/api/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+        // is in LOGIN mode using http-hook-helper
+        await sendRequest(
+          'http://localhost:5000/api/users/login', 'POST', 
+          JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value
-          }),
-        })
-        // actual response payload
-        const responseData = await response.json()
-        // status is a NOT-200
-        if (!response.ok) {
-          throw new Error(responseData.message)
-        }
-        console.log('responseData login', responseData)
-        setIsLoading(false)
+          }), 
+          {
+            'Content-Type': 'application/json'
+          }
+        )
+
+        // console.log('responseData login', res)
+        // setIsLoading(false)
         auth.login()
       } catch (err) {
         console.log(err)
-        setIsLoading(false)
+        // setIsLoading(false)
         // something else than a 400 or 500'ish error occured
-        setError(err.message || 'completely obsolete auth error message from frontend.')
+        // setError(err.message || 'completely obsolete auth error message from frontend.')
       }
+      // is in 'sign-Up-mode' now  
     } else {
-      // is in sign-Up-mode now  
       try {
-        const response = await fetch('http://localhost:5000/api/users/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type' : 'application/json'
-          },
-          body: JSON.stringify({
+        await sendRequest('http://localhost:5000/api/users/signup', 'POST', JSON.stringify({
             name : formState.inputs.name.value, 
             email: formState.inputs.email.value, 
             password: formState.inputs.password.value
           }),
-        })
-        // actual response payload
-        const responseData = await response.json()
-        // status is a NOT-200
-        if (!response.ok) {
-          throw new Error(responseData.message)
-        }
-        console.log('responseData', responseData)
-        setIsLoading(false)
+          {'Content-Type' : 'application/json'},
+        )
+        // console.log('responseData', responseData)
         auth.login()
       } catch (err) {
-        console.log(err)
-        setIsLoading(false)
-        // something else than a 400 or 500'ish error occured
-        setError(err.message || 'completely obsolete auth error message from frontend.')
+        // empty catchblock
       }
     }
-  }
-
-  const errorHandler = () => {
-    // reset to
-    setError(null)
   }
 
   return (
     <React.Fragment>
       {/* not working for some damn reason */}
-      {/* <ErrorModal error={error} onClear={errorHandler} /> */}
+      {/* <ErrorModal error={error} onClear={clearError} /> */}
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay/>}
         <h2>Login Required</h2>
