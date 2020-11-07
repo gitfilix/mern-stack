@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import UsersList from '../components/UsersList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-
+import { useHttpClient } from '../../shared/hooks/http-hook'
 
 const Users = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState()
+  // hook helper httpClient
+  const {isLoading, error, sendRequest, clearError} = useHttpClient()
   const [loadedUsers, setLoadedUsers] = useState()
 
   // load only once: -> useEffect Hook here with an empty []:
@@ -15,34 +15,20 @@ const Users = () => {
     // create iffee: useEffect dont like async/ await functions: 
     // therfore create an iffee (here: sendRequst)
     // and do the async in there 
-    const sendRequest = async () => {
-      setIsLoading(true)
+    const fetchUsers = async () => {
+      // setIsLoading(true)
       try {
         // get the data in a responseData
-        const response = await fetch('http://localhost:5000/api/users')
-        const responseData = await response.json()
-
-
-        // custom error if not 200ish
-        if (!response.ok) {
-          throw new Error(responseData.message)
-        }
+        const responseData = await sendRequest('http://localhost:5000/api/users')
 
         setLoadedUsers(responseData.users)
-        setIsLoading(false)
-      } catch (err) {
-        setError(err.message)
-      }
-      setIsLoading(false)
+        // if error empty obj
+      } catch (err) {}
     }
-    sendRequest()
+    fetchUsers()
     // end of useEffect
-  }, [])
+  }, [sendRequest])
   
-  const errorHandler = () => {
-    setError(null)
-  }
- 
 
   return (
     <>
