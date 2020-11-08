@@ -80,7 +80,10 @@ const login = async (req, res, next) => {
     return next(error)
   }
 
-  res.json({message: 'Logged in! thats good. groovy'})
+  res.json({
+    message: 'Logged in! thats good. groovy', 
+    user: existingUser.toObject({getters: true})
+  })
 }
 
 

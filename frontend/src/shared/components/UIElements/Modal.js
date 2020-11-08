@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 
 import Backdrop from './Backdrop';
+import Card from './Card';
 import './Modal.css';
 
 const ModalOverlay = props => {
@@ -33,7 +34,9 @@ const Modal = props => {
   return (
     <React.Fragment>
       {props.show && <Backdrop onClick={props.onCancel} />}
-      <h2>a fucking error has occured!</h2>
+      <Card>
+        <h4>a fucking modal error has occured!</h4>
+      </Card>
       {/* <CSSTransition */}
         {/* in={props.show} */}
         {/* mountOnEnter */}

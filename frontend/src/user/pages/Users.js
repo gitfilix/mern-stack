@@ -16,9 +16,8 @@ const Users = () => {
     // therfore create an iffee (here: sendRequst)
     // and do the async in there 
     const fetchUsers = async () => {
-      // setIsLoading(true)
       try {
-        // get the data in a responseData
+        // get the data in a responseData with the hook now 
         const responseData = await sendRequest('http://localhost:5000/api/users')
 
         setLoadedUsers(responseData.users)

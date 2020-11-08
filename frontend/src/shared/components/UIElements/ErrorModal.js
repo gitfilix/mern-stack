@@ -5,6 +5,7 @@ import Button from '../FormElements/Button';
 
 
 const ErrorModal = props => {
+  console.log('error model', props.error)
   return (
     <Modal
       onCancel={props.onClear}

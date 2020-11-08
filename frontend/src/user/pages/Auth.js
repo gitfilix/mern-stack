@@ -71,7 +71,7 @@ const Auth = () => {
     if (isLoginMode) {
       try {
         // is in LOGIN mode using http-hook-helper
-        await sendRequest(
+        const responsData = await sendRequest(
           'http://localhost:5000/api/users/login', 'POST', 
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -81,20 +81,17 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         )
-
-        // console.log('responseData login', res)
-        // setIsLoading(false)
-        auth.login()
+        auth.login(responsData.user.id)
       } catch (err) {
         console.log(err)
-        // setIsLoading(false)
-        // something else than a 400 or 500'ish error occured
-        // setError(err.message || 'completely obsolete auth error message from frontend.')
       }
       // is in 'sign-Up-mode' now  
     } else {
       try {
-        await sendRequest('http://localhost:5000/api/users/signup', 'POST', JSON.stringify({
+        const responseData = await sendRequest(
+          'http://localhost:5000/api/users/signup', 
+          'POST',
+          JSON.stringify({
             name : formState.inputs.name.value, 
             email: formState.inputs.email.value, 
             password: formState.inputs.password.value
@@ -102,7 +99,7 @@ const Auth = () => {
           {'Content-Type' : 'application/json'},
         )
         // console.log('responseData', responseData)
-        auth.login()
+        auth.login(responseData.user.id)
       } catch (err) {
         // empty catchblock
       }
