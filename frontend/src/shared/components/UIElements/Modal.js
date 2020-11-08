@@ -6,7 +6,9 @@ import Backdrop from './Backdrop';
 import Card from './Card';
 import './Modal.css';
 
+
 const ModalOverlay = props => {
+  console.log('model overlay props', props)
   const content = (
     <div className={`modal ${props.className}`} style={props.style}>
         <header className={`modal__header ${props.headerClass}`}>
@@ -44,7 +46,7 @@ const Modal = props => {
         {/* timeout={200} */}
         {/* classNames="modal" */}
       {/* > */}
-        {/* <ModalOverlay {...props} /> */}
+        <ModalOverlay {...props} />
       {/* </CSSTransition> */}
     </React.Fragment>
   );
