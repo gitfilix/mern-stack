@@ -35,10 +35,10 @@ const ModalOverlay = props => {
 const Modal = props => {
   return (
     <React.Fragment>
-      {props.show && <Backdrop onClick={props.onCancel} />}
-      <Card>
-        <h4>a fucking modal error has occured!</h4>
-      </Card>
+      {/* {props.show && <Backdrop onClick={props.onCancel} />} */}
+      {/* <Card> */}
+        {/* <h4>a fucking modal error has occured!</h4> */}
+      {/* </Card> */}
       {/* <CSSTransition */}
         {/* in={props.show} */}
         {/* mountOnEnter */}
@@ -46,7 +46,7 @@ const Modal = props => {
         {/* timeout={200} */}
         {/* classNames="modal" */}
       {/* > */}
-        <ModalOverlay {...props} />
+        {/* <ModalOverlay {...props} /> */}
       {/* </CSSTransition> */}
     </React.Fragment>
   );
