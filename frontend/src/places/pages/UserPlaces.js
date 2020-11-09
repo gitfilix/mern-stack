@@ -25,6 +25,11 @@ const UserPlaces = () => {
     fetchPlaces()
   }, [sendRequest, userId])
   
+  const placeDeleteHandler = (deletedPlaceId) => {
+    // return a new array of setLoadedPlaces with filtered out the current deletedPlace
+    setLoadedPlaces(prevPlaces => prevPlaces.filter(places => places.id !== deletedPlaceId))
+  }
+
   // const loadedPlaces = DUMMY_PLACES.filter(place => place.creator === userId);
   return (
     <>
@@ -33,7 +38,7 @@ const UserPlaces = () => {
         <LoadingSpinner asOverlay />
      )}
       {!isLoading && loadedPlaces &&
-      <PlaceList items={loadedPlaces} />
+        <PlaceList items={loadedPlaces} onDeletePlace={placeDeleteHandler} />
       }
     </>
   )

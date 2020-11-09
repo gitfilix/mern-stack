@@ -64,7 +64,7 @@ const UpdatePlace = () => {
   // submit the updated form with the hook as a PATCH request with header
   const placeUpdateSubmitHandler = async event => {
     event.preventDefault();
-    console.log('submithandler updated data: ',formState.inputs);
+    // console.log('submithandler updated data: ',formState.inputs);
     try {
       //update with sendRequest
       await sendRequest(`http://localhost:5000/api/places/${placeId}`, 'PATCH', JSON.stringify({
