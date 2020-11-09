@@ -12,6 +12,7 @@ export const useHttpClient = () =>  {
 
   // request with default values, wrapped in useCallback hook
   const sendRequest = useCallback( async (url, method = 'GET', body = null, headers = {}) => {
+    console.log('hook call url', url)
     setIsLoading(true)
     // store AbortController in useRef for: 
     // signal: 

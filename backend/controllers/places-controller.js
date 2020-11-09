@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 const Place = require('../models/place')
 const User = require('../models/user')
 
-// find places for a given user-ID
+// find places for a given Place-ID
 const getPlacesById = async (req, res, next) => {
   const placeId = req.params.pid // { pid: 'p1'}
   let place

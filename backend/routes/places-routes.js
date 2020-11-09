@@ -9,7 +9,8 @@ const placesControllers = require('../controllers/places-controller')
 // /api/places/p1
 router.get('/:pid', placesControllers.getPlacesById)
 
-// GET api/places/user/u1
+// update place owned by a specified user 
+// GET 'api/places/user/u1'
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
 
 // POST api/places
