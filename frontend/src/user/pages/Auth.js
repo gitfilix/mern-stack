@@ -5,6 +5,7 @@ import Input from '../../shared/components/FormElements/Input'
 import Button from '../../shared/components/FormElements/Button'
 import ErrorModal from '../../shared/components/UIElements/ErrorModal'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import ImageUpload from '../../shared/components/FormElements/ImageUpload'
 
 import {
   VALIDATOR_EMAIL,
@@ -40,12 +41,13 @@ const Auth = () => {
     false
   )
   
-  // login or signUp mode 
+  // login or signUp mode ?
   const switchModeHandler = () => {
     if (!isLoginMode) {
       setFormData({
           ...formState.inputs,
-          name: undefined
+          name: undefined,
+          image: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       )
@@ -55,6 +57,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: '',
+            isValid: false
+          },
+          image:{
+            value: null,
             isValid: false
           }
         },
@@ -67,7 +73,8 @@ const Auth = () => {
   const authSubmitHandler = async event => {
     event.preventDefault();
     // connect to backend
-    
+    console.log('Authform: ', formState.inputs)
+
     if (isLoginMode) {
       try {
         // is in LOGIN mode using http-hook-helper
@@ -126,6 +133,8 @@ const Auth = () => {
               onInput={inputHandler}
             />
           )}
+          {!isLoginMode && 
+            <ImageUpload center id="Image" onInput={inputHandler} />}
           <Input
             element="input"
             id="email"
