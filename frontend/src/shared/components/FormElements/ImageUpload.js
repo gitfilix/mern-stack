@@ -10,9 +10,11 @@ const ImageUpload = props => {
   const filePickerRef = useRef()
 
   useEffect(()=> {
+    // is file undefined?
     if (!file) { 
       return
     }
+    // FileReader is Browser backed- in API
     const fileReader = new FileReader()
     fileReader.onload = () => {
       setPreviewUrl(fileReader.result)
@@ -23,7 +25,7 @@ const ImageUpload = props => {
   const pickedHandler = event => {
     let pickedFile
     let fileIsValid = isValid
-    // we have a file and exactly 1
+    // we have a file and its exactly 1
     if (event.target.files | event.target.files.length === 1 ) {
       console.log('a valid file on evemt target files', event.target.files)
       pickedFile = event.target.files[0]

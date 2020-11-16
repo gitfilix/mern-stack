@@ -74,6 +74,7 @@ const Auth = () => {
     event.preventDefault();
     // connect to backend
     console.log('Authform: ', formState.inputs)
+    
 
     if (isLoginMode) {
       try {
@@ -92,8 +93,8 @@ const Auth = () => {
       } catch (err) {
         console.log(err)
       }
-      // is in 'sign-Up-mode' now  
     } else {
+      // is in 'sign-Up-mode' now  
       try {
         const responseData = await sendRequest(
           'http://localhost:5000/api/users/signup', 
@@ -134,7 +135,7 @@ const Auth = () => {
             />
           )}
           {!isLoginMode && 
-            <ImageUpload center id="Image" onInput={inputHandler} />}
+            <ImageUpload center id="image" onInput={inputHandler} />}
           <Input
             element="input"
             id="email"
