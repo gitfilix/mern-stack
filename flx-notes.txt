@@ -63,3 +63,20 @@ populate method: search in a foreign collection with populte as the key
 // 1. find it from Place with populate WHERE user is creator 
 
 place = await Place.findById(placeId).populate('creator')
+
+
+
+FileReader
+// FileReader is Browser backed- in API 
+// filerReader.onload is needed after file-reading is done. 
+  const fileReader = new FileReader()
+  fileReader.onload = () => {
+    setPreviewUrl(fileReader.result)
+  }
+  fileReader.readAsDataURL(file)
+
+
+
+// backend package accept not only json but also multipart/form-data (mix between text and also binary format)
+ npm install --save multer
+
