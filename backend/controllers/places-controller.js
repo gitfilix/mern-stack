@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+const fs = require('fs')
 const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const { validationResult } = require('express-validator')
@@ -172,6 +173,8 @@ const deletePlace = async (req, res, next) => {
     return next(error)
   }
 
+  const imagePath = place.image
+
   // 3. remofit from collection place WHERE creator have it in his array
   try {
     // create a mongoose session
@@ -190,6 +193,11 @@ const deletePlace = async (req, res, next) => {
     );
     return next(error);
   }
+  // delete the local image physicly with fs.unlink. callback we ignore - well logout
+  fs.unlink(imagePath, err => {
+    console.log(err)
+  })
+
   // respond 200 after successfull deletion 
   res.status(200).json({ message: 'Deleted ugly place.' });
 };
