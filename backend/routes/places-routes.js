@@ -4,6 +4,7 @@ const { check } = require('express-validator')
 // const HttpError = require('../models/http-error')
 
 const placesControllers = require('../controllers/places-controller')
+const fileUpload = require('../middleware/file-upload')
 
 // GET register middleware on router
 // /api/places/p1
@@ -14,8 +15,9 @@ router.get('/:pid', placesControllers.getPlacesById)
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
 
 // POST api/places
-// check middleware for validation 
+// check middleware for validation and fileupload
 router.post('/',
+        fileUpload.single('image'),
         [
           check('title')
             .not()
