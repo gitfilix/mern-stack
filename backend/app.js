@@ -1,5 +1,7 @@
-// core node-filesystem moule
+// core node-filesystem moules fs and path
 const fs = require('fs')
+const path = require('path')
+
 // normaly called server.js 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -13,6 +15,10 @@ const app = express()
 
 // must be before reacing routes: parse json from post payload
 app.use(bodyParser.json())
+
+// allow access to folder /uploads images to display them in the frontend
+// express.static just returns the file given by the path
+app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 // prevent CORS problems: change header for each
 app.use((req, res, next) => {
