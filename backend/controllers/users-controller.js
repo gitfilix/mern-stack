@@ -45,7 +45,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name, 
     email,
-    image: 'https://www.indianapoliszoo.com/wp-content/uploads/2018/04/Amur-tiger3-Fred-Cate.jpg',
+    image: req.file.path,
     password,
     places: []
   })

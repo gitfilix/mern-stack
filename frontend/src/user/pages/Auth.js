@@ -96,13 +96,13 @@ const Auth = () => {
     } else {
       // is in 'sign-Up-mode' now  
       try {
-        // FormData: browser API for binary data
+        // FormData: browser API for binary data (here: image)
         const formData = new FormData()
-        formData.append('name', formState.inputs.name.value)
         formData.append('email', formState.inputs.email.value)
+        formData.append('name', formState.inputs.name.value)
         formData.append('password', formState.inputs.password.value)
         formData.append('image', formState.inputs.image.value)
-
+        // if we do post with formData, no specified content-type is needed anymore!
         const responseData = await sendRequest(
           'http://localhost:5000/api/users/signup', 
           'POST',

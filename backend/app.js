@@ -1,3 +1,5 @@
+// core node-filesystem moule
+const fs = require('fs')
 // normaly called server.js 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -41,8 +43,15 @@ app.use((req, res, next) => {
   throw error
 })
 
+// General error handling
 // special middleware for errorhandling (4 params)
 app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err)
+    })
+  }
+  
   // has a response been sent? 
   if (res.headerSent) {
     return next(error)
