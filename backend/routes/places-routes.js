@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const { check } = require('express-validator')
+const { check, checkSchema } = require('express-validator')
 // const HttpError = require('../models/http-error')
 
 const placesControllers = require('../controllers/places-controller')
 const fileUpload = require('../middleware/file-upload')
+const checkAuth = require('../middleware/check-auth')
 
+// OPEN routes
 // GET register middleware on router
 // /api/places/p1
 router.get('/:pid', placesControllers.getPlacesById)
@@ -13,6 +15,10 @@ router.get('/:pid', placesControllers.getPlacesById)
 // update place owned by a specified user 
 // GET 'api/places/user/u1'
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
+
+// PROTECTED ROUTE
+// handle check token in 
+router.use(checkAuth)
 
 // POST api/places
 // check middleware for validation and fileupload
