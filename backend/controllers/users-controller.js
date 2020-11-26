@@ -2,8 +2,11 @@ const { v4: uuidv4 } = require('uuid')
 const HttpError = require('../models/http-error')
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 const User = require('../models/user')
 const user = require('../models/user')
+const { isValidObjectId } = require('mongoose')
 
 
 const getUsers = async (req, res, next) => {
@@ -53,6 +56,7 @@ const signup = async (req, res, next) => {
     return next(error)
   }
 
+  // new User
   const createdUser = new User({
     name, 
     email,
@@ -69,12 +73,27 @@ const signup = async (req, res, next) => {
     return next(error)
   }
 
-  res.status(201).json({user: createdUser.toObject({ getters: true }) })
+  // create jwt token on userId
+  let token
+  try {
+    token = jwt.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      'supersecret_dont_share_this',
+      { expiresIn: '1h'}
+    )
+  } catch (err) {
+    const error = new HttpError(
+    'Signing up somehow failed, sorry', 500)
+    return next(error)
+  }
+
+  res.status(201).json({userId: createdUser.id, email: createdUser.email, token: token })
 }
 
 const login = async (req, res, next) => {
   const { email, password } = req.body
-  
+ 
+  // check for an existing User
   let existingUser
 
   try {
@@ -85,15 +104,44 @@ const login = async (req, res, next) => {
     return next(error)
   }
 
-  //  if user not exisitng or provided password is not the same as in the db
-  if(!existingUser || existingUser.password !== password) {
+  //  if user not exisit  
+  if(!existingUser) {
     const error = new HttpError('Invalid credetnials, could not login. bad for you', 401)
     return next(error)
   }
+  // check passwordhash of existing user is the same hash
+  let isValidPassword = false
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password)
+  } catch (err) {
+    const error = new HttpError('could not match password, please enter correct pw', 500)
+    return next(error)
+  }
 
+  if(!isValidPassword) {
+    const error = new HttpError('invalid credentials, could not log you in', 401)
+    return next(error)
+  }
+
+  // create jwt token on userId
+  let token
+  try {
+    token = jwt.sign(
+      { userId: existingUser.id, email: existingUser.email },
+      'supersecret_dont_share_this',
+      { expiresIn: '1h' }
+    )
+  } catch (err) {
+    const error = new HttpError(
+      'Login up somehow failed, sorry', 500)
+    return next(error)
+  }
+  
+  // must be a valid user then
   res.json({
-    message: 'Logged in! thats good. groovy', 
-    user: existingUser.toObject({getters: true})
+   userId: existingUser.id,
+   email: existingUser.email,
+   token: token
   })
 }
 
