@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken')
 const HttpError = require('../models/http-error')
 
 module.exports = (req, res, next) => {
+  // because the browser sends default a OPTIONS-request: just continue
+  if (req.method === 'OPTIONS') {
+    return next()
+  }
   try {
     const token = req.headers.authorization.split(' ')[1] // Authorization: 'Bearer TOKEN' -> split(' ')[1] -> token
     if (!token) {

@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react'
 import Card from '../../shared/components/UIElements/Card'
 import Input from '../../shared/components/FormElements/Input'
 import Button from '../../shared/components/FormElements/Button'
-import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+// import ErrorModal from '../../shared/components/UIElements/ErrorModal'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
 
@@ -79,7 +79,7 @@ const Auth = () => {
     if (isLoginMode) {
       try {
         // is in LOGIN mode using http-hook-helper
-        const responsData = await sendRequest(
+        const responseData = await sendRequest(
           'http://localhost:5000/api/users/login', 'POST', 
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -89,7 +89,7 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         )
-        auth.login(responsData.user.id)
+        auth.login(responseData.userId, responseData.token)
       } catch (err) {
         console.log(err)
       }
@@ -108,8 +108,8 @@ const Auth = () => {
           'POST',
           formData
         )
-        // console.log('responseData', responseData)
-        auth.login(responseData.user.id)
+        console.log('responseData sign up', responseData)
+        auth.login(responseData.userId, responseData.token)
       } catch (err) {
         // empty catchblock
       }

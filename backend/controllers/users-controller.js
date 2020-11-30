@@ -50,7 +50,7 @@ const signup = async (req, res, next) => {
   // hashed password pw-string, salt
   let hashedPassword
   try {
-    hashedPassword = await bcryptjs.hash(password, 12)
+    hashedPassword = await bcrypt.hash(password, 12)
   } catch (err) {
     const error = new HttpError('could not creaate user password ', 500)
     return next(error)
