@@ -73,7 +73,7 @@ const Auth = () => {
   const authSubmitHandler = async event => {
     event.preventDefault();
     // connect to backend
-    console.log('Authform: ', formState.inputs)
+    // console.log('Authform: ', formState.inputs)
     
 
     if (isLoginMode) {

@@ -27,7 +27,7 @@ const ImageUpload = props => {
     let fileIsValid = isValid
     // we have a file and its exactly 1
     if (event.target.files | event.target.files.length === 1 ) {
-      console.log('a valid file on evemt target files', event.target.files)
+      // console.log('a valid file on evemt target files', event.target.files)
       pickedFile = event.target.files[0]
       setFile(pickedFile)
       setIsValid(true)

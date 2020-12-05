@@ -8,7 +8,7 @@ import './Modal.css';
 
 
 const ModalOverlay = props => {
-  console.log('model overlay props', props)
+  // console.log('model overlay props', props)
   const content = (
     <div className={`modal ${props.className}`} style={props.style}>
         <header className={`modal__header ${props.headerClass}`}>
@@ -36,9 +36,9 @@ const Modal = props => {
   return (
     <React.Fragment>
       {/* {props.show && <Backdrop onClick={props.onCancel} />} */}
-      {/* <Card> */}
-        {/* <h4>a fucking modal error has occured!</h4> */}
-      {/* </Card> */}
+      <Card>
+        <h4>a fucking modal error has occured!</h4>
+      </Card>
       {/* <CSSTransition */}
         {/* in={props.show} */}
         {/* mountOnEnter */}
