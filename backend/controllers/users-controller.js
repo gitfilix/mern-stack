@@ -106,7 +106,7 @@ const login = async (req, res, next) => {
 
   //  if user not exisit  
   if(!existingUser) {
-    const error = new HttpError('Invalid credetnials, could not login. bad for you', 401)
+    const error = new HttpError('Invalid credetnials (!typos!), could not login. bad for you', 403)
     return next(error)
   }
   // check passwordhash of existing user is the same hash
@@ -119,7 +119,7 @@ const login = async (req, res, next) => {
   }
 
   if(!isValidPassword) {
-    const error = new HttpError('invalid credentials, could not log you in', 401)
+    const error = new HttpError('invalid credentials, could not log you in', 403)
     return next(error)
   }
 

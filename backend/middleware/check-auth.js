@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1] // Authorization: 'Bearer TOKEN' -> split(' ')[1] -> token
     if (!token) {
-      throw new Error('Authentication failed! - no token', 401)
+      throw new Error('Authentication failed! - no token', 403)
     }
     // verify token
     const decodedToken = jwt.verify(token, 'supersecret_dont_share_this')
@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
     next()
   } catch (err) {
     // if not validated - throw this error
-    const error = new HttpError('Authentication failed - other error!', 401)
+    const error = new HttpError('Authentication failed - other error!', 403)
     return next(error)
   }
 }

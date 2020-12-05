@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 // model is a constructor function
 const Place = require('../models/place')
 const User = require('../models/user')
+const user = require('../models/user')
 
 // find places for a given Place-ID
 const getPlacesById = async (req, res, next) => {
@@ -181,7 +182,13 @@ const deletePlace = async (req, res, next) => {
 
   const imagePath = place.image
 
-  // 3. remofit from collection place WHERE creator have it in his array
+  // 3. check if place-creator id is the same as the reqesst user id
+  if(place.creator.id !== req.userData.userId){
+    const error = HttpError('you are not allowed to delete this place', 401)
+    return next(error)
+  }
+
+  // 4. remove it from collection place WHERE creator have it in his array
   try {
     // create a mongoose session
     const sess = await mongoose.startSession()
