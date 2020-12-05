@@ -36,9 +36,9 @@ const Modal = props => {
   return (
     <React.Fragment>
       {/* {props.show && <Backdrop onClick={props.onCancel} />} */}
-      <Card>
-        <h4>a fucking modal error has occured!</h4>
-      </Card>
+      {/* <Card> */}
+        {/* <h4>a fucking modal error has occured!</h4> */}
+      {/* </Card> */}
       {/* <CSSTransition */}
         {/* in={props.show} */}
         {/* mountOnEnter */}

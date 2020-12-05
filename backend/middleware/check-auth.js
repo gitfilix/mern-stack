@@ -6,6 +6,7 @@ module.exports = (req, res, next) => {
   if (req.method === 'OPTIONS') {
     return next()
   }
+  // POST requests handling with token
   try {
     const token = req.headers.authorization.split(' ')[1] // Authorization: 'Bearer TOKEN' -> split(' ')[1] -> token
     if (!token) {

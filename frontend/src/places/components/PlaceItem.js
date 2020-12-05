@@ -32,7 +32,13 @@ const PlaceItem = props => {
     console.log('DELETING...', `${props.id}`);
     // places id from props.id
     try {
-      await sendRequest(`http://localhost:5000/api/places/${props.id}`, 'DELETE')
+      await sendRequest(`http://localhost:5000/api/places/${props.id}`,
+        'DELETE',
+        null,
+        {
+          Authorization: 'Bearer ' + auth.token
+        }
+      )
       // we call a function delete from the places-id in PlacesList-obj (onDeletePlace()) with the id
       props.onDelete(props.id)
     } catch (err) {}
