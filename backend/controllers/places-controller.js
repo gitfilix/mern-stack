@@ -144,6 +144,12 @@ const updatePlace = async (req, res, next) => {
     return next(error)
   }
 
+  // check if creator id is the same as the current user - so only creators can modyfy their places
+  if (place.creator.toString() !== req.userData.userId) {
+    const error = new HttpError('could not update place user and creator are not identical', 401)
+    return next(error)
+  }
+
   place.title = title
   place.description = description
   // save updated
