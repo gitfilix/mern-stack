@@ -1,4 +1,4 @@
-import React, {useState, useCallback } from 'react';
+import React, {useState, useCallback, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -18,17 +18,34 @@ import { AuthContext } from './shared/context/auth-context'
 const App = () => {
   const [token, setToken] = useState(false)
   const [userId, setUserId] = useState(false)
-
-  // run that only on inital load dep-arry: []
+ 
+  // run that only on initial load dep-arry: []
   const login = useCallback((uid, token) => {
     setToken(token)
     setUserId(uid)
+    // localstorage set uid and token
+    localStorage.setItem('userData', JSON.stringify({
+        userId: uid,
+        token: token
+      })
+    )
   }, [])
 
   const logout = useCallback(() => {
     setToken(null)
     setUserId(null)
+    localStorage.removeItem('userData')
   }, [])
+
+  // useEffect runs always After (the first) render-cycle
+  // if stored.data for user id -> execute login function
+  useEffect(() => {
+    // read the localstorage
+    const storedData = JSON.parse(localStorage.getItem('userData'))
+    if (storedData && storedData.token) {
+      login(storedData.userId, storedData.token)
+    }
+  }, [login])
 
   // routes for logged-in or not
   let routes
