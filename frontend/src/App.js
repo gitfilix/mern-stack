@@ -20,13 +20,17 @@ const App = () => {
   const [userId, setUserId] = useState(false)
  
   // run that only on initial load dep-arry: []
-  const login = useCallback((uid, token) => {
+  const login = useCallback((uid, token, expirationDate) => {
     setToken(token)
     setUserId(uid)
+    // token expiration Date + now + 1h or valid expiration date from props
+    const tokenExpirationDate = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60)
+
     // localstorage set uid and token
     localStorage.setItem('userData', JSON.stringify({
         userId: uid,
-        token: token
+        token: token,
+        expiration: tokenExpirationDate.toISOString()
       })
     )
   }, [])
@@ -42,8 +46,11 @@ const App = () => {
   useEffect(() => {
     // read the localstorage
     const storedData = JSON.parse(localStorage.getItem('userData'))
-    if (storedData && storedData.token) {
-      login(storedData.userId, storedData.token)
+    if (
+      storedData &&
+      storedData.token &&
+      new Date(storedData.expiration)> new Date()) {
+      login(storedData.userId, storedData.token, new Date(storedData.expiration))
     }
   }, [login])
 
