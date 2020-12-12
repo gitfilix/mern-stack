@@ -72,7 +72,8 @@ app.use((error, req, res, next) => {
 // mongoose mongo- db connection to 
 // old only for backend
 // const connectUrl = 'mongodb+srv://mongodbuser01:77nobigdeal88@cluster0.ajxtu.mongodb.net/places?retryWrites=true&w=majority'
-const connectUrl = 'mongodb+srv://mongodbuser01:77nobigdeal88@cluster0.ajxtu.mongodb.net/mern?retryWrites=true&w=majority'
+// const connectUrl = `mongodb+srv://mongodbuser01:77nobigdeal88@cluster0.ajxtu.mongodb.net/mern?retryWrites=true&w=majority`
+const connectUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ajxtu.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
 const connectConfig = {
   useNewUrlParser: true,
   useUnifiedTopology: true,

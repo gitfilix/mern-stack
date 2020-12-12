@@ -1,0 +1,9 @@
+{
+  "env": {
+    "DB_USER": "mongodbuser01",
+    "DB_PASSWORD" : "77nobigdeal88",
+    "DB_NAME" : "mern",
+    "GOOGLE_API_KEY": "AIzaSyCmpV1WDtatCO3pWtoT2Ytfe9lFmeVf3hY",
+    "JWT_KEY": "supersecret_dont_share_this"
+  }
+}

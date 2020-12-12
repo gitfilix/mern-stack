@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
       throw new Error('Authentication failed! - no token', 403)
     }
     // verify token
-    const decodedToken = jwt.verify(token, 'supersecret_dont_share_this')
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY)
     // the decodedToken is already verified - so authentication went well
     // add userData to the userId obj
     req.userData = {userId: decodedToken.userId}

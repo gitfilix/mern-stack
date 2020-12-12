@@ -18,7 +18,6 @@ import { useAuth } from './shared/hooks/auth-hook'
 const App = () => {
   const { token, login, logout, userId } = useAuth()
   console.log('token', token)
-  console.log('login', login)
   // routes for logged-in or not
   let routes
 

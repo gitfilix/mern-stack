@@ -1,7 +1,8 @@
 const axios = require('axios')
 const HttpError = require('../models/http-error')
 //use google maps api
-const API_KEY = 'AIzaSyCmpV1WDtatCO3pWtoT2Ytfe9lFmeVf3hY'
+// const API_KEY = 'AIzaSyCmpV1WDtatCO3pWtoT2Ytfe9lFmeVf3hY'
+const API_KEY = process.env.GOOGLE_API_KEY
 
 async function getCoordsForAddress(address) {
   const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(
