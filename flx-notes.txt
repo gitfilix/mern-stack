@@ -80,3 +80,7 @@ FileReader
 // backend package accept not only json but also multipart/form-data (mix between text and also binary format)
  npm install --save multer
 
+
+// find snytax: give back username , email but no password. 
+ users = await User.find({}, '-password')
+

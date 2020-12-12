@@ -7,7 +7,7 @@ const placesControllers = require('../controllers/places-controller')
 const fileUpload = require('../middleware/file-upload')
 const checkAuth = require('../middleware/check-auth')
 
-// OPEN routes
+// up here: OPEN routes
 // GET register middleware on router
 // /api/places/p1
 router.get('/:pid', placesControllers.getPlacesById)
@@ -16,7 +16,7 @@ router.get('/:pid', placesControllers.getPlacesById)
 // GET 'api/places/user/u1'
 router.get('/user/:uid', placesControllers.getPlacesByUserId)
 
-// PROTECTED ROUTE
+// down here: PROTECTED ROUTE
 // handle check token in 
 router.use(checkAuth)
 
