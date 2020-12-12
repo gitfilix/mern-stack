@@ -22,11 +22,9 @@ import './Auth.css';
 const Auth = () => {
   // context helper
   const auth = useContext(AuthContext)
-
   const [isLoginMode, setIsLoginMode] = useState(true)
   // helper http request 
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -73,8 +71,7 @@ const Auth = () => {
   const authSubmitHandler = async event => {
     event.preventDefault();
     // connect to backend
-    // console.log('Authform: ', formState.inputs)
-    
+    console.log('Authform: ', formState.inputs)
 
     if (isLoginMode) {
       try {
@@ -108,7 +105,7 @@ const Auth = () => {
           'POST',
           formData
         )
-        console.log('responseData sign up', responseData)
+        // console.log('responseData sign up', responseData)
         auth.login(responseData.userId, responseData.token)
       } catch (err) {
         // empty catchblock
