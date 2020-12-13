@@ -77,7 +77,7 @@ const Auth = () => {
       try {
         // is in LOGIN mode using http-hook-helper
         const responseData = await sendRequest(
-          'http://localhost:5000/api/users/login', 'POST', 
+          process.env.REACT_APP_BACKEND_URL + '/users/login', 'POST', 
           JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value
@@ -101,7 +101,7 @@ const Auth = () => {
         formData.append('image', formState.inputs.image.value)
         // if we do post with formData, no specified content-type is needed anymore!
         const responseData = await sendRequest(
-          'http://localhost:5000/api/users/signup', 
+          process.env.REACT_APP_BACKEND_URL + '/users/signup', 
           'POST',
           formData
         )

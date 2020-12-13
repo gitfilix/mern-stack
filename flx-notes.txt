@@ -10,6 +10,11 @@ backend: npm start
 http://localhost:5000/products
 
 
+mongo db:
+https://account.mongodb.com/account/login
+
+felix.adam@web....
+
 best practice make a copy, (...rest ) edit copy, push back 
 
 context: 

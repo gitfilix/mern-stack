@@ -18,7 +18,7 @@ const Users = () => {
     const fetchUsers = async () => {
       try {
         // get the data in a responseData with the hook now 
-        const responseData = await sendRequest('http://localhost:5000/api/users')
+        const responseData = await sendRequest(process.env.REACT_APP_BACKEND_URL +'/users')
 
         setLoadedUsers(responseData.users)
         // if error empty obj
