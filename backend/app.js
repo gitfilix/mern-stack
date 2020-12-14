@@ -43,11 +43,22 @@ app.use((req, res, next) => {
 app.use('/api/places', placesRoutes)
 app.use('/api/users', usersRoutes) // => api/users
 
+// PROD BUILD: reading the frontend from compiled public folder
+// app.use((req, res, next) => {
+  // res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+// })
+// 
 // middleware if a unvalid url route was entered - errorhandling
 app.use((req, res, next) => {
   const error = new HttpError('Server: could not find this route, sorry...', 404)
   throw error
 })
+
+// PRODUCTION BUILD (same server)
+// serve everything from static folder
+// app.use(express.static(path.join('public')))
+
+
 
 // General error handling
 // special middleware for errorhandling (4 params)
